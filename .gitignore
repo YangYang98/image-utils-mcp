@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+.venv
+
+# IDE
+.vscode/
+.idea/
+.idea/workspace.xml
+.idea/vcs.xml
+
+*.swp
+*.swo
+
+# Docker
+*.log
+data/
+logs/
+
+# 系统
+.DS_Store
+Thumbs.db
