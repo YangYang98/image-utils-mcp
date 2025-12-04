@@ -41,32 +41,61 @@ async def main():
         print("\n" + "=" * 50 + "\n")
 
         # 调用计算器
-        print("调用计算器:")
-        result = await client.call_tool(
-            "calculator",
-            operation="add",
-            a=10,
-            b=5
+        # print("调用计算器:")
+        # result = await client.call_tool(
+        #     "calculator",
+        #     operation="add",
+        #     a=10,
+        #     b=5
+        # )
+        # print(f"结果: {json.dumps(result, indent=2, ensure_ascii=False)}")
+        #
+        # print("\n" + "=" * 50 + "\n")
+        #
+        # # 获取时间
+        # print("获取当前时间:")
+        # time_result = await client.call_tool("time", format="human")
+        # print(f"时间: {json.dumps(time_result, indent=2, ensure_ascii=False)}")
+        #
+        # print("\n" + "=" * 50 + "\n")
+        #
+        # # 搜索示例
+        # print("执行搜索:")
+        # search_result = await client.call_tool(
+        #     "websearch",
+        #     query="Python MCP protocol",
+        #     max_results=3
+        # )
+        # print(f"搜索结果: {json.dumps(search_result, indent=2, ensure_ascii=False)}")
+
+        print("执行图片处理:")
+        image_result = await client.call_tool(
+            "text2image",
+            title="智能分页生成",
+            content="""小兔子最近总是失眠，晚上翻来覆去睡不着。
+
+她抱着枕头，躺在床上，无奈地看着天花板。
+
+小狐狸发现了小兔子在烦恼，转过身来心疼地问：
+
+"怎么了，小兔子？是不是有心事？"
+
+小兔子摇了摇头，皱着眉说："不知道，就是怎么都睡不着，
+
+脑子里乱七八糟的。"
+
+小狐狸想了想，温柔地笑着说："那我给你讲个睡前故事吧，
+
+听了你就能快点入睡了。"
+
+小兔子的眼睛亮了一下，但又有些挑剔地问："那你讲什么
+
+故事呢？我喜欢有剧情曲折的，但又不能太吓人，要有趣但
+
+又不能太复杂，要不然又该睡不着了。""",
+            image_type="BlackBgWhiteText"
         )
-        print(f"结果: {json.dumps(result, indent=2, ensure_ascii=False)}")
-
-        print("\n" + "=" * 50 + "\n")
-
-        # 获取时间
-        print("获取当前时间:")
-        time_result = await client.call_tool("time", format="human")
-        print(f"时间: {json.dumps(time_result, indent=2, ensure_ascii=False)}")
-
-        print("\n" + "=" * 50 + "\n")
-
-        # 搜索示例
-        print("执行搜索:")
-        search_result = await client.call_tool(
-            "websearch",
-            query="Python MCP protocol",
-            max_results=3
-        )
-        print(f"搜索结果: {json.dumps(search_result, indent=2, ensure_ascii=False)}")
+        print(f"执行图片处理: {json.dumps(image_result, indent=2, ensure_ascii=False)}")
 
     finally:
         await client.close()

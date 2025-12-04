@@ -7,6 +7,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from .tools.Text2ImageTool import Text2ImageTool
 from .bean.BaseModel import ToolDefinition, ToolCallResponse, ToolCallRequest, ErrorResponse
 from .tools.CalculatorTool import CalculatorTool
 from .tools.ImageProcessingTool import ImageProcessingTool
@@ -37,7 +38,8 @@ class MCPServer:
             WeatherTool,
             ImageProcessingTool,
             WebSearchTool,
-            TimeTool
+            TimeTool,
+            Text2ImageTool
         ]
 
         for tool_class in tool_classes:
