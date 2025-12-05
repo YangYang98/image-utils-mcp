@@ -163,7 +163,7 @@ def create_smart_multi_page_story(title, content, max_pages=None,
     - max_pages: 最大页数限制（None表示无限制）
     - output_prefix: 输出文件前缀
     - width: 图片宽度
-    - height: 图片高度
+    - height: 图高度
     """
     # 获取字体以计算行高等参数
     title_font = get_chinese_font(46, bold=True)  # 加粗标题字体
@@ -182,9 +182,9 @@ def create_smart_multi_page_story(title, content, max_pages=None,
 
     # 计算行高
     try:
-        line_height = 35  # 固定行高
+        line_height = 70  # 固定行高
     except:
-        line_height = 40  # 备用行高
+        line_height = 75  # 备用行高
 
     # 计算每页可容纳的行数
     lines_per_page = available_height // line_height
@@ -267,18 +267,28 @@ def create_smart_multi_page_story(title, content, max_pages=None,
                 title_width = len(title) * 36 // 2
 
             title_x = 60  # (width - title_width) // 2
-            draw.text((title_x, 50), title, font=title_font, fill='white')
+            # 创建一个临时的透明图层来实现透明度效果
+            txt_layer = Image.new('RGBA', image.size, (0, 0, 0, 0))
+            txt_draw = ImageDraw.Draw(txt_layer)
+            txt_draw.text((title_x, 50), title, font=title_font, fill=(255, 255, 255, 200))
+            image = Image.alpha_composite(image.convert('RGBA'), txt_layer).convert('RGB')
 
         # 绘制分割线
         # draw.line([(50, 120), (width - 50, 120)], fill='lightgray', width=2)
 
         # 绘制内容
         margin = 60
-        y_position = 150 if i == 1 else 50  # 第一页需要给标题留空间，其他页从顶部开始
-
+        y_position = 180 if i == 1 else 50  # 第一页需要给标题留空间，其他页从顶部开始
+        
+        # 创建一个临时的透明图层来实现透明度效果
+        txt_layer = Image.new('RGBA', image.size, (0, 0, 0, 0))
+        txt_draw = ImageDraw.Draw(txt_layer)
+        
         for line in page_lines:
-            draw.text((margin, y_position), line, font=content_font, fill='white')
+            txt_draw.text((margin, y_position), line, font=content_font, fill=(255, 255, 255, 180))
             y_position += line_height
+            
+        image = Image.alpha_composite(image.convert('RGBA'), txt_layer).convert('RGB')
 
         # 绘制页码
         page_text = f"第 {i} / {total_pages} 页"
@@ -292,7 +302,12 @@ def create_smart_multi_page_story(title, content, max_pages=None,
 
         page_x = width - page_width - 60
         page_y = height - 50
-        draw.text((page_x, page_y), page_text, font=page_font, fill='lightgray')
+        
+        # 创建一个临时的透明图层来实现页码透明度效果
+        txt_layer = Image.new('RGBA', image.size, (0, 0, 0, 0))
+        txt_draw = ImageDraw.Draw(txt_layer)
+        txt_draw.text((page_x, page_y), page_text, font=page_font, fill=(211, 211, 211, 150))
+        image = Image.alpha_composite(image.convert('RGBA'), txt_layer).convert('RGB')
 
         # 添加边框
         # draw.rectangle([(30, 30), (width - 30, height - 30)], outline='darkgray', width=2)
