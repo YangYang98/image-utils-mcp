@@ -1,14 +1,14 @@
-# MCP 服务依赖
+# MCP service dependencies
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 pydantic>=2.4.0
 httpx>=0.25.0
 python-multipart>=0.0.6
 
-# 可选：图像处理相关（如果需要真实的图像处理）
-# Pillow>=10.0.0
+# Optional: Image processing related (if real image processing is needed)
+Pillow>=10.0.0
 # opencv-python>=4.8.0
 # numpy>=1.24.0
 
-# 开发依赖
+# Development dependencies
 python-dotenv>=1.0.0

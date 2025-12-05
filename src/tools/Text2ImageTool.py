@@ -152,7 +152,7 @@ def split_text_into_pages(content, chars_per_line=25, lines_per_page=25):
 
 
 def create_smart_multi_page_story(title, content, max_pages=None,
-                                  output_file_path_prefix=os.path.abspath(os.sep), width=800, height=1200):
+                                  output_file_path_prefix="data", width=800, height=1200):
     """
     智能分页创建多页黑底白字故事图片
 
@@ -223,12 +223,24 @@ def create_smart_multi_page_story(title, content, max_pages=None,
     # 修改文件名格式，加入当前时间信息
     from datetime import datetime
     now = datetime.now()
-    output_dir = os.path.dirname(output_file_path_prefix)
+    print(f"当前工作目录: {os.getcwd()}, 脚本文件所在的目录: {os.path.dirname(os.path.abspath(__file__))}, ")
+    output_dir = os.path.dirname(output_file_path_prefix) if output_file_path_prefix != "data" else "data"
     if output_dir and not os.path.exists(output_dir):
         os.makedirs(output_dir)
+
+    # 确保输出目录存在
+    # 确保输出目录存在
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+    else:
+        # 如果没有指定目录，则使用默认的 data 目录
+        output_dir = "data"
+        os.makedirs(output_dir, exist_ok=True)
+        output_file_path_prefix = output_dir
+    
     for i, page_lines in enumerate(pages, 1):
 
-        file_name = f"{now.year}_{now.month:02d}_{now.day:02d}_{now.hour:02d}_{i:02d}.png"
+        file_name = f"{now.year}{now.month:02d}{now.day:02d}{now.hour:02d}_page_{i:02d}.png"
         # 优化路径拼接逻辑，处理output_file_path_prefix末尾是否有斜杠的情况
         if output_file_path_prefix.endswith('/') or output_file_path_prefix.endswith('\\'):
             output_path = f"{output_file_path_prefix}{file_name}"
