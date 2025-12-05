@@ -153,7 +153,7 @@ def split_text_into_pages(content, chars_per_line=25, lines_per_page=25):
 
 
 def create_smart_multi_page_story(title, content, max_pages=None,
-                                  output_file_path_prefix="data", width=800, height=1200):
+                                  output_file_path_prefix="images", width=800, height=1200):
     """
     智能分页创建多页黑底白字故事图片
 
@@ -225,7 +225,7 @@ def create_smart_multi_page_story(title, content, max_pages=None,
     from datetime import datetime
     now = datetime.now()
     print(f"当前工作目录: {os.getcwd()}, 脚本文件所在的目录: {os.path.dirname(os.path.abspath(__file__))}, ")
-    output_dir = os.path.dirname(output_file_path_prefix) if output_file_path_prefix != "data" else "data"
+    output_dir = os.path.dirname(output_file_path_prefix) if output_file_path_prefix != "images" else "images"
     if output_dir and not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -234,8 +234,8 @@ def create_smart_multi_page_story(title, content, max_pages=None,
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
     else:
-        # 如果没有指定目录，则使用默认的 data 目录
-        output_dir = "data"
+        # 如果没有指定目录，则使用默认的 images 目录
+        output_dir = "images"
         os.makedirs(output_dir, exist_ok=True)
         output_file_path_prefix = output_dir
     

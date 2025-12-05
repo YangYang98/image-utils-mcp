@@ -7,6 +7,11 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# 安装中文字体
+RUN apt-get update && \
+    apt-get install -y fonts-wqy-zenhei fonts-wqy-microhei fonts-noto-cjk && \
+    rm -rf /var/lib/apt/lists/*
+
 # 复制依赖文件并安装
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
