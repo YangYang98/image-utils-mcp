@@ -20,7 +20,7 @@ from fastapi.responses import JSONResponse
 
 # 修改导入路径为绝对导入
 from src.tools.Text2ImageTool import Text2ImageTool
-from src.bean.BaseModel import ToolDefinition, ToolCallResponse, ToolCallRequest, ErrorResponse, ToolParameter
+from src.bean.BaseModel import ToolCallResponse, ToolCallRequest, ErrorResponse, ToolParameter, ToolDefinition
 from src.tools.CalculatorTool import CalculatorTool
 from src.tools.ImageProcessingTool import ImageProcessingTool
 from src.tools.TimeTool import TimeTool
@@ -179,12 +179,38 @@ async def health_check():
     }
 
 
-@app.get("/tools", response_model=List[ToolDefinition])
+@app.get("/tools")
 async def list_tools():
     """列出所有可用工具"""
     try:
         tools = await app.state.mcp_server.list_tools()
-        return tools
+        # 转换为n8n兼容格式
+        n8n_tools = []
+        for tool in tools:
+            properties = {}
+            for name, param in tool.parameters.items():
+                properties[name] = {
+                    "type": str(param.type)
+                }
+                if param.description:
+                    properties[name]["description"] = str(param.description)
+                if param.enum:
+                    properties[name]["enum"] = [str(e) for e in param.enum]
+                if param.default is not None:
+                    properties[name]["default"] = str(param.default)
+            
+            n8n_tool_format = {
+                "name": tool.name,
+                "description": tool.description,
+                "inputSchema": {
+                    "type": "object",
+                    "properties": properties,
+                    "required": tool.required
+                }
+            }
+            n8n_tools.append(n8n_tool_format)
+        
+        return n8n_tools
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -287,7 +313,7 @@ async def mcp_json_rpc_handler(request: Request):
         # 处理 tools/list 请求
         elif body.get("method") == "tools/list":
             tools = await app.state.mcp_server.list_tools()
-            # 转换为 MCP 协议格式
+            # 转换为 MCP 协议格式，同时满足n8n要求
             mcp_tools = []
             for tool in tools:
                 # 将参数转换为正确的格式
@@ -303,18 +329,18 @@ async def mcp_json_rpc_handler(request: Request):
                     if param.default is not None:
                         properties[name]["default"] = str(param.default)
                 
-                mcp_tools.append({
-                    "type": "function",
-                    "function": {
-                        "name": tool.name,
-                        "description": tool.description,
-                        "parameters": {
-                            "type": "object",
-                            "properties": properties,
-                            "required": tool.required
-                        }
+                # 创建符合n8n要求的工具格式
+                n8n_tool_format = {
+                    "name": tool.name,
+                    "description": tool.description,
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": properties,
+                        "required": tool.required
                     }
-                })
+                }
+                
+                mcp_tools.append(n8n_tool_format)
                 
             response = {
                 "jsonrpc": "2.0",
