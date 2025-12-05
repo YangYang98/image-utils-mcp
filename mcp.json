@@ -1,0 +1,109 @@
+{
+  "name": "image-utils-mcp",
+  "description": "A service providing various utilities through the Model Context Protocol",
+  "commands": [
+    {
+      "name": "Start MCP Server",
+      "command": "uvicorn src.server:app --host 0.0.0.0 --port 8000",
+      "description": "Start the MCP server with FastAPI"
+    }
+  ],
+  "tools": [
+    {
+      "name": "calculator",
+      "description": "Performs basic mathematical operations",
+      "parameters": {
+        "operation": {
+          "type": "string",
+          "description": "The operation to perform (add, subtract, multiply, divide)",
+          "required": true
+        },
+        "a": {
+          "type": "number",
+          "description": "First operand",
+          "required": true
+        },
+        "b": {
+          "type": "number",
+          "description": "Second operand",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "weather",
+      "description": "Gets weather information for a location",
+      "parameters": {
+        "location": {
+          "type": "string",
+          "description": "The location to get weather for",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "imageprocessing",
+      "description": "Processes images with various operations",
+      "parameters": {
+        "image_path": {
+          "type": "string",
+          "description": "Path to the image file",
+          "required": true
+        },
+        "operation": {
+          "type": "string",
+          "description": "Operation to perform (resize, blur, rotate)",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "websearch",
+      "description": "Searches the web for information",
+      "parameters": {
+        "query": {
+          "type": "string",
+          "description": "Search query",
+          "required": true
+        },
+        "max_results": {
+          "type": "number",
+          "description": "Maximum number of results to return (default: 5)",
+          "required": false
+        }
+      }
+    },
+    {
+      "name": "time",
+      "description": "Gets current time in various formats",
+      "parameters": {
+        "format": {
+          "type": "string",
+          "description": "Time format (iso, human, timestamp) (default: iso)",
+          "required": false
+        }
+      }
+    },
+    {
+      "name": "text2image",
+      "description": "Converts text to image",
+      "parameters": {
+        "title": {
+          "type": "string",
+          "description": "Title for the image",
+          "required": true
+        },
+        "content": {
+          "type": "string",
+          "description": "Content to convert to image",
+          "required": true
+        },
+        "image_type": {
+          "type": "string",
+          "description": "Type of image to generate (default: BlackBgWhiteText)",
+          "required": false
+        }
+      }
+    }
+  ]
+}

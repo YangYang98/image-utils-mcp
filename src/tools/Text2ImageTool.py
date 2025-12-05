@@ -7,6 +7,7 @@ import textwrap
 import os
 import sys
 import math
+import logging
 
 
 def get_chinese_font(font_size=24, bold=False):
@@ -333,6 +334,13 @@ class Text2ImageTool(BaseTool):
     async def execute(self, title: str, content: str, image_type: str) -> Dict[str, Any]:
         image_paths = []
         try:
+            logger = logging.getLogger(__name__)
+            logger.info(f"开始执行Text2ImageTool，参数: title={title}, content_length={len(content)}, image_type={image_type}")
+            
+            # 检查输入参数是否包含编码问题
+            if '?' in title or '?' in content:
+                logger.warning("检测到参数可能存在编码问题")
+            
             if image_type == "BlackBgWhiteText":
                 image_paths = create_smart_multi_page_story(title, content)
             else:
@@ -340,12 +348,17 @@ class Text2ImageTool(BaseTool):
                 image_paths = create_smart_multi_page_story(title, content)
                 print(f"未知操作:{image_type}, 默认使用: BlackBgWhiteText")
 
-            return {
+            result = {
                 "type": "text",
                 "text": f"生成图片成功，共生成: {len(image_paths)} 张",
-                "result": f"{image_paths}"
+                "result": f"{image_paths}",
+                "originContent": f"原始内容 image_type:{image_type}, title:{title}, content:{content}"
             }
+            logger.info(f"Text2ImageTool执行完成，生成了 {len(image_paths)} 张图片")
+            return result
         except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.error(f"生成图片失败: {str(e)}", exc_info=True)
             return {
                 "type": "error",
                 "text": f"生成图片失败: {str(e)}"

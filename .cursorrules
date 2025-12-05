@@ -1,0 +1,37 @@
+# Cursor Rules for image-utils-mcp
+
+This project implements the Model Context Protocol (MCP) to provide various tools including calculator, weather, image processing, web search, time and text-to-image conversion.
+
+## Access Instructions
+
+To access this service from Cursor:
+
+1. Add this server to your MCP configuration
+2. The service exposes tools via standard MCP protocol
+3. Tools available:
+   - calculator: Performs basic mathematical operations
+   - weather: Gets weather information for a location
+   - imageprocessing: Processes images with various operations
+   - websearch: Searches the web for information
+   - time: Gets current time in various formats
+   - text2image: Converts text to image
+
+## Tool Call Specifications
+
+When calling MCP tools, you must send POST requests to `/tools/{tool_name}` endpoint, where {tool_name} is the specific tool name. The `/tools` root endpoint only supports GET requests to get the tool list and does not support POST method.
+
+Each MCP tool must provide clear parameter descriptions, including parameter name, type, whether required, default value, and purpose description to ensure that large models can correctly understand and call them.
+
+## Character Encoding Guidelines
+
+To ensure proper handling of Chinese and other non-ASCII characters:
+
+1. Clients should use UTF-8 encoding when sending requests
+2. HTTP request headers should include `Content-Type: application/json; charset=utf-8`
+3. The server automatically handles multiple encoding formats, but if Chinese characters appear as question marks, please check the client's encoding settings
+
+## Security Notes
+
+- This service only performs predefined operations
+- All operations are logged for audit purposes
+- No personal data is stored or transmitted outside the requested operations
