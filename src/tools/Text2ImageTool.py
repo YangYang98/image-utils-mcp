@@ -166,8 +166,8 @@ def create_smart_multi_page_story(title, content, max_pages=None,
     - height: 图片高度
     """
     # 获取字体以计算行高等参数
-    title_font = get_chinese_font(36, bold=True)  # 加粗标题字体
-    content_font = get_chinese_font(27)
+    title_font = get_chinese_font(46, bold=True)  # 加粗标题字体
+    content_font = get_chinese_font(32)
 
     # 创建临时图片用于计算文本大小
     temp_image = Image.new('RGB', (width, height), 'black')
@@ -257,22 +257,24 @@ def create_smart_multi_page_story(title, content, max_pages=None,
         image = Image.new('RGB', (width, height), 'black')
         draw = ImageDraw.Draw(image)
 
-        # 绘制标题
-        try:
-            left, top, right, bottom = draw.textbbox((0, 0), title, font=title_font)
-            title_width = right - left
-        except:
-            title_width = len(title) * 36 // 2
+        # 只在第一页绘制标题
+        if i == 1:
+            # 绘制标题
+            try:
+                left, top, right, bottom = draw.textbbox((0, 0), title, font=title_font)
+                title_width = right - left
+            except:
+                title_width = len(title) * 36 // 2
 
-        title_x = 60  # (width - title_width) // 2
-        draw.text((title_x, 50), title, font=title_font, fill='white')
+            title_x = 60  # (width - title_width) // 2
+            draw.text((title_x, 50), title, font=title_font, fill='white')
 
         # 绘制分割线
         # draw.line([(50, 120), (width - 50, 120)], fill='lightgray', width=2)
 
         # 绘制内容
         margin = 60
-        y_position = 150
+        y_position = 150 if i == 1 else 50  # 第一页需要给标题留空间，其他页从顶部开始
 
         for line in page_lines:
             draw.text((margin, y_position), line, font=content_font, fill='white')
